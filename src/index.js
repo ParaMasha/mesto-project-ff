@@ -1,4 +1,6 @@
 
+import './pages/index.css';
+import { initialCards } from './scripts/cards.js';
 
 // Функция создания карточки
 function createNewCard({name, link}, onCallBackFunction) {
