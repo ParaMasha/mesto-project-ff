@@ -21,24 +21,16 @@ const popupCaption = popupTypeImage.querySelector(".popup__caption");
 const placesList = document.querySelector(".places__list");
 
 // Элементы формы 
-const formElement = document.querySelector(".popup__form");
+const formElement = popupTypeEdit.querySelector(".popup__form");
 const nameInput = document.querySelector(".popup__input_type_name");
 const jobInput = document.querySelector(".popup__input_type_description");
-const profileName = document.querySelector(".prifile__title");
+const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
 // Элементы новой карточки
-const addCardForm = document.querySelector(".popup__form");
+const addCardForm = popupTypeNewCard.querySelector(".popup__form");
 const cardTitleInput = document.querySelector(".popup__input_type_card-name");
 const cardLinkInput = document.querySelector(".popup__input_type_url");
-
-// Отображение карточек на странице
-function showCards(cards) {
-  cards.forEach((card) => {
-    const cardElement = createNewCard(card, deleteCard, openImgPopup);
-    placesList.append(cardElement);
-  });
-};
 
 // Отправка формы редактирования профиля
 function handleFormSubmit(evt) {
@@ -66,13 +58,6 @@ function handleAddCard(evt) {
 // Слушатель отправки на обработку новой карточки
 addCardForm.addEventListener("submit", handleAddCard);
 
-// Открытие попапов с картинкой
-function openImgPopup (name, link) {
-  popupImage.src = link;
-  popupImage.alt = name;
-  popupCaption.textContent = name;
-  openPopup(popupTypeImage);
-};
 
 // Слушатель открытия попапа редактирования карточки
 profileEditButton.addEventListener("click", () => {
@@ -97,5 +82,21 @@ profileCloseButtons.forEach((button) => {
 document.querySelectorAll(".popup").forEach((popup) => {
   popup.addEventListener("mousedown", closePopupOnOverlay);
 });
+
+// Открытие попапов с картинкой
+function openImgPopup (name, link) {
+  popupImage.src = link;
+  popupImage.alt = name;
+  popupCaption.textContent = name;
+  openPopup(popupTypeImage);
+};
+
+// Отображение карточек на странице
+function showCards(cards) {
+  cards.forEach((card) => {
+    const cardElement = createNewCard(card, deleteCard, openImgPopup);
+    placesList.append(cardElement);
+  });
+};
 
 showCards(initialCards);
