@@ -107,3 +107,5 @@ function showCards(cards) {
 
 // Вызов отображения карточек
 showCards(initialCards);
+
+// Работа завершена
