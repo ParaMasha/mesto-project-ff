@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards.js';
-import { createNewCard, deleteCard } from './scripts/cards.js';
-import { openPopup, closePopup, closePopupOnOverlay } from './scripts/modal.js';
+import { createNewCard, deleteCard } from './scripts/card.js';
+import { openPopup, closePopup } from './scripts/modal.js';
 
 // Попапы
 const popupTypeEdit = document.querySelector(".popup_type_edit");
@@ -33,7 +33,7 @@ const cardTitleInput = document.querySelector(".popup__input_type_card-name");
 const cardLinkInput = document.querySelector(".popup__input_type_url");
 
 // Отправка формы редактирования профиля
-function handleFormSubmit(evt) {
+function submitEditProfileForm(evt) {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
@@ -45,7 +45,7 @@ function handleLikeCard(evt) {
 }
 
 // Слушатель отправки редакции профиля
-formEditProfile.addEventListener("submit", handleFormSubmit);
+formEditProfile.addEventListener("submit", submitEditProfileForm);
 
 // Добавление карточки
 function handleAddCard(evt) {
@@ -77,15 +77,6 @@ profileAddButton.addEventListener("click", () => {
 profileCloseButtons.forEach((button) => {
   button.addEventListener("click", (evt) => {
     closePopup(evt.currentTarget.closest(".popup"));
-  });
-});
-
-// Слушатель закрытия попапов по клику Overlay
-document.querySelectorAll(".popup").forEach((popup) => {
-  popup.addEventListener("mousedown", (evt) => {
-    if (evt.target === popup) {
-      closePopup(popup);
-    }
   });
 });
 
