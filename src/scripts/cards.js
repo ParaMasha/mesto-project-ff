@@ -26,7 +26,7 @@ export const initialCards = [
 ];
 
 // Функция создания карточки
-export function createNewCard({name, link}, onDelete, clickOnImage) {
+export function createNewCard({name, link}, onDelete, clickOnImage, handleLikeCard) {
   // Темплейт карточки
   const cardTemplate = document.querySelector("#card-template").content;
 
@@ -49,7 +49,7 @@ export function createNewCard({name, link}, onDelete, clickOnImage) {
 
   // Установка лайка на карточке
   cardElement.querySelector(".card__like-button").addEventListener("click", (evt) => {
-    evt.target.classList.toggle("card__like-button_active");
+    evt.target.classList.toggle("card__like-button_is-active");
   });
 
   // Слушатель открытия карточки с картинкой
