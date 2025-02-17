@@ -5,13 +5,8 @@ function getCardTemplate() {
     return cardTemplate.querySelector(".places__item").cloneNode(true);
 }
 
-// Функция переключения лайка
-function toggleLike(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
-}
-
 // Функция создания карточки
-export function createNewCard({ name, link }, onDelete, clickOnImage, handleLikeCard) {
+export function createNewCard({ name, link }, onDelete, clickOnImage, toggleLike) {
   const cardElement = getCardTemplate();
 
   // Установление значений вложенных элементов
@@ -26,9 +21,14 @@ export function createNewCard({ name, link }, onDelete, clickOnImage, handleLike
   const deleteButton = cardElement.querySelector(".card__delete-button");
   deleteButton.addEventListener("click", () => onDelete(cardElement));
 
+  // Функция переключения лайка
+  function toggleLike(evt) {
+    evt.target.classList.toggle("card__like-button_is-active");
+    }
+
   // Добавление обработчика лайка
   const likeButton = cardElement.querySelector(".card__like-button");
-  likeButton.addEventListener("click", handleLikeCard || toggleLike); // Используем переданную функцию или `toggleLike` по умолчанию
+  likeButton.addEventListener("click", toggleLike);
 
   // Обработчик клика по изображению
   cardImage.addEventListener("click", () => clickOnImage(name, link));

@@ -40,7 +40,7 @@ function submitEditProfileForm(evt) {
   closePopup(popupTypeEdit);
 };
 
-function handleLikeCard(evt) {
+function toggleLike(evt) {
   evt.target.classList.toggle("card__like-button_active");
 }
 
@@ -51,7 +51,7 @@ formEditProfile.addEventListener("submit", submitEditProfileForm);
 function handleAddCard(evt) {
   evt.preventDefault();
   const newCard = { name: cardTitleInput.value, link: cardLinkInput.value };
-  const cardElement = createNewCard(newCard, deleteCard, openImgPopup, handleLikeCard);
+  const cardElement = createNewCard(newCard, deleteCard, openImgPopup, toggleLike);
   placesList.prepend(cardElement);
   formAddCard.reset();
   closePopup(popupTypeNewCard);
@@ -75,8 +75,11 @@ profileAddButton.addEventListener("click", () => {
 
 // Слушатель кнопок  закрытия попапов
 profileCloseButtons.forEach((button) => {
-  button.addEventListener("click", (evt) => {
-    closePopup(evt.currentTarget.closest(".popup"));
+  button.addEventListener("click", () => {
+      const popup = button.closest(".popup");
+      if (popup) {
+          closePopup(popup);
+      }
   });
 });
 
@@ -91,7 +94,7 @@ function openImgPopup(name, link) {
 // Отображение карточек
 function showCards(cards) {
   cards.forEach((card) => {
-    const cardElement = createNewCard(card, deleteCard, openImgPopup, handleLikeCard);
+    const cardElement = createNewCard(card, deleteCard, openImgPopup, toggleLike);
     placesList.append(cardElement);
   });
 }
