@@ -18,7 +18,7 @@ export function closePopup(popup) {
 // Закрытие попапа по клавише Esc
 function closePopupOnEsc(evt) {
   if (evt.key === "Escape") {
-      const popupIsOpened = document.querySelector(".popup_opened");
+      const popupIsOpened = document.querySelector(".popup_is-opened");
       if (popupIsOpened) {
           closePopup(popupIsOpened);
       }
