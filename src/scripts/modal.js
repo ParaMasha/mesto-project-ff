@@ -1,8 +1,3 @@
-// Скрываем все попапы при загрузке страницы
-document.querySelectorAll(".popup").forEach((popup) => {
-  popup.classList.add("popup_hidden"); 
-});
-
 // Функция открытия попапа
 export function openPopup(popup) { 
   popup.classList.add("popup_is-opened");
@@ -32,11 +27,6 @@ export function closeByOverlayClick(evt) {
   }
 };
 
-// Добавление обработчиков закрытия на все попапы
-document.querySelectorAll(".popup").forEach((popup) => {
-  popup.classList.add("popup_is-animated");
-  popup.addEventListener("mousedown", closeByOverlayClick);
-});
 
 
 

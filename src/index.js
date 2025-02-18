@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards.js';
-import { createNewCard, deleteCard } from './scripts/card.js';
-import { openPopup, closePopup } from './scripts/modal.js';
+import { createNewCard, deleteCard, toggleLike } from './scripts/card.js';
+import { openPopup, closePopup, closeByOverlayClick } from './scripts/modal.js';
 
 // Попапы
 const popupTypeEdit = document.querySelector(".popup_type_edit");
@@ -39,10 +39,6 @@ function submitEditProfileForm(evt) {
   profileDescription.textContent = jobInput.value;
   closePopup(popupTypeEdit);
 };
-
-function toggleLike(evt) {
-  evt.target.classList.toggle("card__like-button_active");
-}
 
 // Слушатель отправки редакции профиля
 formEditProfile.addEventListener("submit", submitEditProfileForm);
@@ -83,13 +79,19 @@ profileCloseButtons.forEach((button) => {
   });
 });
 
+// Добавление обработчиков закрытия на все попапы
+document.querySelectorAll(".popup").forEach((popup) => {
+  popup.classList.add("popup_is-animated");
+  popup.addEventListener("mousedown", closeByOverlayClick);
+});
+
 // Открытие попапов с картинкой
 function openImgPopup(name, link) {
   popupImage.src = link;
   popupImage.alt = name;
   popupCaption.textContent = name;
   openPopup(popupTypeImage);
-}
+};
 
 // Отображение карточек
 function showCards(cards) {
@@ -97,7 +99,7 @@ function showCards(cards) {
     const cardElement = createNewCard(card, deleteCard, openImgPopup, toggleLike);
     placesList.append(cardElement);
   });
-}
+};
 
 // Вызов отображения карточек
 showCards(initialCards);
