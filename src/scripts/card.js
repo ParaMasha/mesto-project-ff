@@ -11,7 +11,7 @@ export function toggleLike(evt) {
 };
 
 // Функция создания карточки
-export function createNewCard({ name, link }, onDelete, clickOnImage, toggleLike) {
+export function createNewCard({ name, link, likes }, onDelete, clickOnImage, toggleLike) {
   const cardElement = getCardTemplate();
 
   // Установление значений вложенных элементов
@@ -21,6 +21,10 @@ export function createNewCard({ name, link }, onDelete, clickOnImage, toggleLike
 
   const cardTitle = cardElement.querySelector(".card__title");
   cardTitle.textContent = name;
+
+  // Счетчик поставленных лайков
+  const likeCountElement = cardElement.querySelector(".card__like-counter");
+  likeCountElement.textContent = likes.length;
 
   // Добавление обработчика удаления карточки
   const deleteButton = cardElement.querySelector(".card__delete-button");
