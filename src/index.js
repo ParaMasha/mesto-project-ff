@@ -2,6 +2,24 @@ import './pages/index.css';
 import { initialCards } from './scripts/cards.js';
 import { createNewCard, deleteCard, toggleLike } from './scripts/card.js';
 import { openPopup, closePopup, closeByOverlayClick } from './scripts/modal.js';
+import { enableValidation, clearValidation } from './scripts/validation.js';
+
+// Объект настроек валидации
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+
+// Включаем валидацию всех форм
+enableValidation(validationConfig);
+
+// Находим формы, чтобы передавать их в clearValidation
+const profileForm = document.querySelector(".popup_type_edit .popup__form");
+const cardForm = document.querySelector(".popup_type_new-card .popup__form");
 
 // Попапы
 const popupTypeEdit = document.querySelector(".popup_type_edit");
@@ -21,14 +39,12 @@ const popupCaption = popupTypeImage.querySelector(".popup__caption");
 const placesList = document.querySelector(".places__list");
 
 // Элементы формы 
-const formEditProfile = popupTypeEdit.querySelector(".popup__form");
 const nameInput = document.querySelector(".popup__input_type_name");
 const jobInput = document.querySelector(".popup__input_type_description");
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
 // Элементы новой карточки
-const formAddCard = popupTypeNewCard.querySelector(".popup__form");
 const cardTitleInput = document.querySelector(".popup__input_type_card-name");
 const cardLinkInput = document.querySelector(".popup__input_type_url");
 
@@ -41,7 +57,7 @@ function submitEditProfileForm(evt) {
 };
 
 // Слушатель отправки редакции профиля
-formEditProfile.addEventListener("submit", submitEditProfileForm);
+profileForm.addEventListener("submit", submitEditProfileForm);
 
 // Добавление карточки
 function handleAddCard(evt) {
@@ -49,23 +65,26 @@ function handleAddCard(evt) {
   const newCard = { name: cardTitleInput.value, link: cardLinkInput.value };
   const cardElement = createNewCard(newCard, deleteCard, openImgPopup, toggleLike);
   placesList.prepend(cardElement);
-  formAddCard.reset();
+  cardForm.reset();
   closePopup(popupTypeNewCard);
 };
 
 // Слушатель отправки на обработку новой карточки
-formAddCard.addEventListener("submit", handleAddCard);
+cardForm.addEventListener("submit", handleAddCard);
 
 
 // Слушатель открытия попапа редактирования карточки
 profileEditButton.addEventListener("click", () => {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidation(profileForm, validationConfig);
   openPopup(popupTypeEdit);
 });
 
 // Слушатель попапа новой карточки
 profileAddButton.addEventListener("click", () => {
+  cardForm.reset();
+  clearValidation(cardForm, validationConfig);
   openPopup(popupTypeNewCard);
 });
 
