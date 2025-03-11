@@ -24,4 +24,11 @@
     font-size: 14px;
     line-height: 17px;
   }
+
+}
+
+.popup__button_disabled {
+  background-color: #ffffff;
+  border: 1px solid gray;
+  color: gray;
 }
