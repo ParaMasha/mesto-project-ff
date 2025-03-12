@@ -2,7 +2,7 @@ import './pages/index.css';
 import { createNewCard, deleteCard, toggleLike } from './scripts/card.js';
 import { openPopup, closePopup, closeByOverlayClick } from './scripts/modal.js';
 import { enableValidation, clearValidation } from './scripts/validation.js';
-import { getMyInfo, getInitialCards,editProfile, addCard, deleteCardById, createAvatar} from './scripts/api.js';
+import { getMyInfo, getInitialCards,editProfile, addCard, addLike, removeLike, deleteCardById, createAvatar} from './scripts/api.js';
 
 // Объект настроек валидации
 const validationConfig = {
@@ -73,7 +73,7 @@ function handleAddCard(evt) {
   const newName = cardTitleInput.value;
   const newLink = cardLinkInput.value;
 
-  // 1. Отправляем POST-запрос, создаём карточку на сервере
+  // Отправляем POST-запрос, создаём карточку на сервере
   addCard(newName, newLink)
     .then((cardData) => {
       const cardElement = createNewCard(cardData, deleteCard, openImgPopup, toggleLike);
@@ -131,8 +131,8 @@ function openImgPopup(name, link) {
 
 // Отображение карточек
 function showCards(cards) {
-  cards.forEach((card) => {
-    const cardElement = createNewCard(card, deleteCard, openImgPopup, toggleLike);
+  cards.forEach((cardData) => {
+    const cardElement = createNewCard(cardData, deleteCard, openImgPopup, toggleLike);
     placesList.append(cardElement);
   });
 };
