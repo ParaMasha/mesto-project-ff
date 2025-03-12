@@ -625,28 +625,98 @@ template {
 }
 
 .profile__image {
+  position: relative;
   width: 120px;
   height: 120px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
 }
 
-@media screen and (max-width: 740px) {
-  .profile__image {
-    margin: 0 10px 0 0;
-  }
+.profile__image:hover {
+  opacity: 0.5;
 }
 
-@media screen and (max-width: 480px) {
-  .profile__image {
-    margin-right: 0;
-  }
+.profile__image::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
+.profile__image::after {
+  content: "";
+  background-image: url(8667ac4a523e8fc42e59.svg);
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1; 
+}
+
+.profile__image:hover::before,
+.profile__image:hover::after {
+  opacity: 1;
+}
+.popup__image_new_avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.popup__image_new_avatar.popup_is-opened {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup__image_new_avatar .popup__content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 430px;
+  width: 100%;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.popup__image_new_avatar .popup__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup__image_new_avatar .popup__input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.popup__image_new_avatar .popup__button {
+  width: 100%;
+}
 .profile {
   font-family: 'Inter', Arial, sans-serif;
   color: #fff;
@@ -727,6 +797,7 @@ template {
   opacity: 0.6;
 }
 
+
 .card__like-button_is-active {
   background: transparent url(75438e944a43e4c0b404.svg) no-repeat;
 }
@@ -766,6 +837,12 @@ template {
   margin: 0;
 }
 
+.card__like-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
 .card {
   font-family: 'Inter', Arial, sans-serif;
   -webkit-border-radius: 10px;
