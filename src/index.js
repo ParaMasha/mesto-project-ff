@@ -137,23 +137,15 @@ function showCards(cards) {
   });
 };
 
-// Получение информации о пользователе
-getMyInfo()
-  .then((userData) => {
+Promise.all([getMyInfo(), getInitialCards()])
+  .then(([userData, cards]) => {
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
+    const myUserId = userData._id;
+    showCards(cards, myUserId);
   })
   .catch((err) => {
-    console.log(`Не удалось загрузить данные пользователя: ${err}`);
-  });
-
-  // Получение начальных карточек
-  getInitialCards()
-  .then((cards) => {
-    showCards(cards); 
-  })
-  .catch((err) => {
-    console.log(`Не удалось загрузить данные карточки: ${err}`);
+    console.log(`Ошибка при загрузке данных: ${err}`);
   });
 
   // Смена аватара 
