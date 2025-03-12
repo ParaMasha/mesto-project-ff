@@ -48,6 +48,12 @@ const profileDescription = document.querySelector(".profile__description");
 const cardTitleInput = document.querySelector(".popup__input_type_card-name");
 const cardLinkInput = document.querySelector(".popup__input_type_url");
 
+//Аватар
+const popupAvatar = document.querySelector(".popup__image_new_avatar"); 
+const avatarForm = popupAvatar.querySelector(".popup__form"); 
+const avatarInput = popupAvatar.querySelector(".popup__input_type_avatar-url");
+const profileAvatar = document.querySelector(".profile__image"); 
+
 // Отправка формы редактирования профиля
 function submitEditProfileForm(evt) {
   evt.preventDefault();
@@ -137,6 +143,7 @@ function showCards(cards) {
   });
 };
 
+
 Promise.all([getMyInfo(), getInitialCards()])
   .then(([userData, cards]) => {
     profileName.textContent = userData.name;
@@ -148,17 +155,40 @@ Promise.all([getMyInfo(), getInitialCards()])
     console.log(`Ошибка при загрузке данных: ${err}`);
   });
 
+  // Обработчик клика на аватар
+  profileAvatar.addEventListener("click", () => {
+    avatarForm.reset(); 
+    clearValidation(avatarForm, validationConfig);
+    openPopup(popupAvatar);
+  });
+
+
+  // Обработчик клика по аватару
+  profileAvatar.addEventListener("click", () => {
+    if (!popupAvatar) {
+      console.log("Ошибка: попап смены аватара не найден!");
+      return;
+    }
+  
+    avatarForm.reset(); 
+    clearValidation(avatarForm, validationConfig); 
+    openPopup(popupAvatar); 
+  });
+
   // Смена аватара 
   function submitAvatarForm(evt) {
     evt.preventDefault();
     const avatarURL = avatarInput.value;
   
-    createAvatar(avatarURL)
+    createAvatar(avatarURL) 
       .then((res) => {
-        document.querySelector('.profile__image').src = res.avatar;
-        closePopup(popupAvatar);
+        profileAvatar.src = res.avatar; 
+        closePopup(popupAvatar); 
       })
       .catch((err) => {
-        console.log(`Ошибка при попытке обновления аватара: ${err}`);
+        console.log(`Ошибка при обновлении аватара: ${err}`);
       });
   }
+  
+  // Добавляем слушатель на отправку формы
+  avatarForm.addEventListener("submit", submitAvatarForm);
