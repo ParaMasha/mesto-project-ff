@@ -1,44 +1,44 @@
-.profile__image_new_avatar {
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  cursor: pointer;
-  border: none;
-}
-
-.profile__image_new_avatar::before {
-  content: '';
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.popup__image_new_avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
   top: 0;
   left: 0;
-}
-
-.profile__image_new_avatar::after {
-  background-image: url('../../../images/edit-icon.svg');
-  content: '';
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  filter: brightness(0) invert(1);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   opacity: 0;
+  visibility: hidden;
   transition: opacity 0.3s ease;
-  z-index: 1;
 }
 
-.profile__image_new_avatar:hover::before, .profile__image_new_avatar:hover::after {
+.popup__image_new_avatar .popup_is-opened {
   opacity: 1;
+  visibility: visible;
+}
+
+.popup__image_new_avatar .popup__content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 430px;
+  width: 100%;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.popup__image_new_avatar .popup__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup__image_new_avatar .popup__input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.popup__image_new_avatar .popup__button {
+  width: 100%;
 }

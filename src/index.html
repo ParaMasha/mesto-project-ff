@@ -14,7 +14,11 @@
   </header>
   <main class="content">
     <section class="profile page__section">
+      <div class="profile__image-container">
       <img src="<%=require('./images/avatar.jpg')%>" alt="аватар" class="profile__image">
+      <div class="profile__image-overlay"></div> 
+      <div class="profile__image-edit-icon"></div>
+      </div> 
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -33,7 +37,7 @@
     </p>
   </footer>
 
-  <div class="popup popup__image_new_avatar">
+  <div class="popup popup_type_avatar">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Обновить аватар</h3>

@@ -4,6 +4,7 @@ import { openPopup, closePopup, closeByOverlayClick } from './scripts/modal.js';
 import { enableValidation, clearValidation } from './scripts/validation.js';
 import { getMyInfo, getInitialCards,editProfile, addCard, addLike, removeLike, deleteCardById, createAvatar} from './scripts/api.js';
 
+
 // Объект настроек валидации
 const validationConfig = {
   formSelector: '.popup__form',
@@ -35,6 +36,7 @@ const profileCloseButtons = document.querySelectorAll(".popup__close");
 const popupImage = popupTypeImage.querySelector(".popup__image");
 const popupCaption = popupTypeImage.querySelector(".popup__caption");
 
+
 // Картинки карточек
 const placesList = document.querySelector(".places__list");
 
@@ -49,10 +51,10 @@ const cardTitleInput = document.querySelector(".popup__input_type_card-name");
 const cardLinkInput = document.querySelector(".popup__input_type_url");
 
 //Аватар
-const popupAvatar = document.querySelector(".popup__image_new_avatar"); 
+const popupAvatar = document.querySelector(".popup_type_avatar"); 
 const avatarForm = popupAvatar.querySelector(".popup__form"); 
-const avatarInput = popupAvatar.querySelector(".popup__input_type_avatar-url");
-const profileAvatar = document.querySelector(".profile__image"); 
+const avatarInput = avatarForm.querySelector(".popup__input_type_avatar-url");
+const profileAvatarContainer = document.querySelector(".profile__image-container"); 
 
 // Отправка формы редактирования профиля
 function submitEditProfileForm(evt) {
@@ -143,7 +145,6 @@ function showCards(cards) {
   });
 };
 
-
 Promise.all([getMyInfo(), getInitialCards()])
   .then(([userData, cards]) => {
     profileName.textContent = userData.name;
@@ -155,40 +156,34 @@ Promise.all([getMyInfo(), getInitialCards()])
     console.log(`Ошибка при загрузке данных: ${err}`);
   });
 
-  // Обработчик клика на аватар
-  profileAvatar.addEventListener("click", () => {
-    avatarForm.reset(); 
-    clearValidation(avatarForm, validationConfig);
-    openPopup(popupAvatar);
-  });
-
-
-  // Обработчик клика по аватару
-  profileAvatar.addEventListener("click", () => {
-    if (!popupAvatar) {
-      console.log("Ошибка: попап смены аватара не найден!");
-      return;
-    }
-  
+  profileAvatarContainer.addEventListener("click", () => {
     avatarForm.reset(); 
     clearValidation(avatarForm, validationConfig); 
     openPopup(popupAvatar); 
   });
-
-  // Смена аватара 
-  function submitAvatarForm(evt) {
-    evt.preventDefault();
-    const avatarURL = avatarInput.value;
   
-    createAvatar(avatarURL) 
+  //Обработчик отправки формы смены аватара
+  avatarForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    
+    const avatarURL = avatarInput.value; 
+    const submitButton = avatarForm.querySelector(".popup__button"); 
+  
+    submitButton.textContent = "Сохранение..."; 
+    submitButton.disabled = true; 
+  
+    createAvatar(avatarURL)
       .then((res) => {
-        profileAvatar.src = res.avatar; 
+        document.querySelector(".profile__image").src = res.avatar; 
         closePopup(popupAvatar); 
+        avatarForm.reset(); 
       })
       .catch((err) => {
         console.log(`Ошибка при обновлении аватара: ${err}`);
+      })
+      .finally(() => {
+        submitButton.textContent = "Сохранить"; 
+        submitButton.disabled = false; 
       });
-  }
-  
-  // Добавляем слушатель на отправку формы
-  avatarForm.addEventListener("submit", submitAvatarForm);
+  });
+
