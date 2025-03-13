@@ -61,6 +61,11 @@ function submitEditProfileForm(evt) {
   evt.preventDefault();
   const newName = nameInput.value;
   const newAbout = jobInput.value;
+  const submitButton = profileForm.querySelector(".popup__button"); 
+
+  submitButton.textContent = "Сохранение..."; 
+  submitButton.disabled = true; 
+
   editProfile(newName, newAbout)
     .then((updatedUserData) => {
       profileName.textContent = updatedUserData.name;
@@ -69,6 +74,10 @@ function submitEditProfileForm(evt) {
     })
     .catch((err) => {
       console.log(`Ошибка при обновлении профиля: ${err}`);
+    })
+    .finally(() => {
+      submitButton.textContent = "Сохранить"; 
+      submitButton.disabled = false; 
     });
 };
 
@@ -80,6 +89,10 @@ function handleAddCard(evt) {
   evt.preventDefault();
   const newName = cardTitleInput.value;
   const newLink = cardLinkInput.value;
+  const submitButton = cardForm.querySelector(".popup__button");
+
+  submitButton.textContent = "Сохранение...";
+  submitButton.disabled = true;
 
   // Отправляем POST-запрос, создаём карточку на сервере
   addCard(newName, newLink)
@@ -91,6 +104,10 @@ function handleAddCard(evt) {
     })
     .catch((err) => {
       console.log(`Ошибка при добавлении карточки: ${err}`);
+    })
+    .finally(() => {
+      submitButton.textContent = "Сохранить";
+      submitButton.disabled = false;
     });
 };
 
