@@ -15,38 +15,36 @@ export function toggleLike(evt) {
   const cardId = cardElement.dataset.id;
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
 
-  if (!isLiked) {
-    addLike(cardId)
-      .then((updatedCard) => {
-        likeButton.classList.add("card__like-button_is-active");
-        likeCountElement.textContent = updatedCard.likes.length;
-      })
-      .catch((err) => console.log(`Ошибка при лайке: ${err}`));
-  } else {
-    removeLike(cardId)
-      .then((updatedCard) => {
-        likeButton.classList.remove("card__like-button_is-active");
-        likeCountElement.textContent = updatedCard.likes.length;
-      })
-      .catch((err) => console.log(`Ошибка при дизлайке: ${err}`));
-  }
+  // Оптимизированная логика лайков
+  const likeMethod = isLiked ? removeLike : addLike;
+
+  likeMethod(cardId)
+    .then((updatedCard) => {
+      likeButton.classList.toggle("card__like-button_is-active");
+      likeCountElement.textContent = updatedCard.likes.length;
+    })
+    .catch((err) => console.log(`Ошибка при ${isLiked ? "дизлайке" : "лайке"}: ${err}`));
 }
 
-// Создание карточки
+// Функция создания карточки
 export function createNewCard({ name, link, likes = [], owner = {}, _id }, myUserId, onDelete, clickOnImage) {
   const cardElement = getCardTemplate();
   cardElement.dataset.id = _id;
 
+  // Устанавливаем изображение
   const cardImage = cardElement.querySelector(".card__image");
   cardImage.src = link;
   cardImage.alt = name;
 
+  // Устанавливаем название
   const cardTitle = cardElement.querySelector(".card__title");
   cardTitle.textContent = name;
 
+  // Устанавливаем количество лайков
   const likeCountElement = cardElement.querySelector(".card__like-counter");
   likeCountElement.textContent = likes.length;
 
+  // Добавляем кнопку удаления только для своих карточек
   const deleteButton = cardElement.querySelector(".card__delete-button");
   if (owner && owner._id === myUserId) {
     deleteButton.addEventListener("click", () => onDelete(cardElement, _id));
@@ -54,9 +52,11 @@ export function createNewCard({ name, link, likes = [], owner = {}, _id }, myUse
     deleteButton.remove();
   }
 
+  // Добавляем обработчик лайка
   const likeButton = cardElement.querySelector(".card__like-button");
   likeButton.addEventListener("click", (evt) => toggleLike(evt));
 
+  // Добавляем обработчик клика по изображению
   cardImage.addEventListener("click", () => clickOnImage(name, link));
 
   return cardElement;
