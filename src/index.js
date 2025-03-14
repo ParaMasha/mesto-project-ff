@@ -55,6 +55,7 @@ const popupAvatar = document.querySelector(".popup_type_avatar");
 const avatarForm = popupAvatar.querySelector(".popup__form"); 
 const avatarInput = avatarForm.querySelector(".popup__input_type_avatar-url");
 const profileAvatarContainer = document.querySelector(".profile__image-container"); 
+const profileAvatar = document.querySelector(".profile__image"); 
 
 // Отправка формы редактирования профиля
 function submitEditProfileForm(evt) {
@@ -148,29 +149,46 @@ document.querySelectorAll(".popup").forEach((popup) => {
 
 // Открытие попапов с картинкой
 function openImgPopup(name, link) {
+  if (!popupImage || !popupCaption) {
+    console.error("Ошибка: popupImage или popupCaption не найдены!");
+    return;
+  }
+  
   popupImage.src = link;
-  popupImage.alt = name;
-  popupCaption.textContent = name;
+  popupImage.alt = name || "Изображение";
+  popupCaption.textContent = name || "Без названия";
+
   openPopup(popupTypeImage);
-};
+}
+
+function handleDeleteCard(cardElement, cardId) {
+  deleteCardById(cardId)
+    .then(() => {
+      cardElement.remove(); // Удаляем только после успешного ответа сервера
+    })
+    .catch((err) => {
+      console.error(`Ошибка при удалении карточки: ${err}`);
+    });
+}
 
 // Отображение карточек
-function showCards(cards) {
+function showCards(cards, myUserId) {
   cards.forEach((cardData) => {
-    const cardElement = createNewCard(cardData, deleteCard, openImgPopup, toggleLike);
+    const cardElement = createNewCard(cardData, myUserId, handleDeleteCard, openImgPopup, toggleLike);
     placesList.append(cardElement);
   });
-};
+}
 
 Promise.all([getMyInfo(), getInitialCards()])
   .then(([userData, cards]) => {
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
+    profileAvatar.src = userData.avatar; // ✅ Теперь аватар не сбрасывается при перезагрузке
     const myUserId = userData._id;
     showCards(cards, myUserId);
   })
   .catch((err) => {
-    console.log(`Ошибка при загрузке данных: ${err}`);
+    console.error(`Ошибка при загрузке данных: ${err}`);
   });
 
   profileAvatarContainer.addEventListener("click", () => {
@@ -182,25 +200,24 @@ Promise.all([getMyInfo(), getInitialCards()])
   //Обработчик отправки формы смены аватара
   avatarForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    
-    const avatarURL = avatarInput.value; 
-    const submitButton = avatarForm.querySelector(".popup__button"); 
   
-    submitButton.textContent = "Сохранение..."; 
-    submitButton.disabled = true; 
+    const avatarURL = avatarInput.value;
+    const submitButton = avatarForm.querySelector(".popup__button");
+  
+    submitButton.textContent = "Сохранение...";
+    submitButton.disabled = true;
   
     createAvatar(avatarURL)
       .then((res) => {
-        document.querySelector(".profile__image").src = res.avatar; 
-        closePopup(popupAvatar); 
-        avatarForm.reset(); 
+        profileAvatar.src = res.avatar; // ✅ Мгновенно обновляем аватар в интерфейсе
+        closePopup(popupAvatar);
+        avatarForm.reset();
       })
       .catch((err) => {
-        console.log(`Ошибка при обновлении аватара: ${err}`);
+        console.error(`Ошибка при обновлении аватара: ${err}`);
       })
       .finally(() => {
-        submitButton.textContent = "Сохранить"; 
-        submitButton.disabled = false; 
+        submitButton.textContent = "Сохранить";
+        submitButton.disabled = false;
       });
   });
-
