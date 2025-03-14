@@ -88,29 +88,36 @@ profileForm.addEventListener("submit", submitEditProfileForm);
 // Добавление карточки
 function handleAddCard(evt) {
   evt.preventDefault();
-  const newName = cardTitleInput.value;
-  const newLink = cardLinkInput.value;
+  const newName = cardTitleInput.value.trim();
+  const newLink = cardLinkInput.value.trim();
   const submitButton = cardForm.querySelector(".popup__button");
 
   submitButton.textContent = "Сохранение...";
   submitButton.disabled = true;
 
-  // Отправляем POST-запрос, создаём карточку на сервере
   addCard(newName, newLink)
     .then((cardData) => {
-      const cardElement = createNewCard(cardData, deleteCard, openImgPopup, toggleLike);
+      console.log("Добавлена карточка:", cardData);
+      const cardElement = createNewCard(
+        { ...cardData, owner: { _id: myUserId } },  
+        myUserId, 
+        handleDeleteCard, 
+        openImgPopup, 
+        toggleLike
+      );
       placesList.prepend(cardElement);
       cardForm.reset();
       closePopup(popupTypeNewCard);
     })
     .catch((err) => {
-      console.log(`Ошибка при добавлении карточки: ${err}`);
+      console.error(`Ошибка при добавлении карточки: ${err}`);
+      alert("Ошибка при добавлении карточки. Проверьте данные!");
     })
     .finally(() => {
       submitButton.textContent = "Сохранить";
       submitButton.disabled = false;
     });
-};
+}
 
 // Слушатель отправки на обработку новой карточки
 cardForm.addEventListener("submit", handleAddCard);
@@ -164,7 +171,7 @@ function openImgPopup(name, link) {
 function handleDeleteCard(cardElement, cardId) {
   deleteCardById(cardId)
     .then(() => {
-      cardElement.remove(); // Удаляем только после успешного ответа сервера
+      cardElement.remove(); 
     })
     .catch((err) => {
       console.error(`Ошибка при удалении карточки: ${err}`);
@@ -179,12 +186,14 @@ function showCards(cards, myUserId) {
   });
 }
 
+let myUserId;
+
 Promise.all([getMyInfo(), getInitialCards()])
   .then(([userData, cards]) => {
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
-    profileAvatar.src = userData.avatar; // ✅ Теперь аватар не сбрасывается при перезагрузке
-    const myUserId = userData._id;
+    profileAvatar.src = userData.avatar; 
+    myUserId = userData._id; 
     showCards(cards, myUserId);
   })
   .catch((err) => {
@@ -209,7 +218,7 @@ Promise.all([getMyInfo(), getInitialCards()])
   
     createAvatar(avatarURL)
       .then((res) => {
-        profileAvatar.src = res.avatar; // ✅ Мгновенно обновляем аватар в интерфейсе
+        profileAvatar.src = res.avatar;
         closePopup(popupAvatar);
         avatarForm.reset();
       })

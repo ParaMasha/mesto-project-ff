@@ -32,41 +32,35 @@ export function toggleLike(evt) {
   }
 }
 
-export function createNewCard({ name, link, likes = [], owner, _id }, myUserId, onDelete, clickOnImage) {
+// Создание карточки
+export function createNewCard({ name, link, likes = [], owner = {}, _id }, myUserId, onDelete, clickOnImage) {
   const cardElement = getCardTemplate();
   cardElement.dataset.id = _id;
 
-  // Устанавливаем изображение
   const cardImage = cardElement.querySelector(".card__image");
   cardImage.src = link;
   cardImage.alt = name;
 
-  // Устанавливаем название
   const cardTitle = cardElement.querySelector(".card__title");
   cardTitle.textContent = name;
 
-  // Устанавливаем количество лайков
   const likeCountElement = cardElement.querySelector(".card__like-counter");
   likeCountElement.textContent = likes.length;
 
-  // Показываем или скрываем кнопку удаления
   const deleteButton = cardElement.querySelector(".card__delete-button");
-
   if (owner && owner._id === myUserId) {
     deleteButton.addEventListener("click", () => onDelete(cardElement, _id));
   } else {
-    deleteButton.remove(); // Убираем кнопку, если это чужая карточка
+    deleteButton.remove();
   }
 
-  // Добавляем обработчик лайка
   const likeButton = cardElement.querySelector(".card__like-button");
-  likeButton.addEventListener("click", toggleLike);
+  likeButton.addEventListener("click", (evt) => toggleLike(evt));
 
-  // Добавляем обработчик клика по изображению
   cardImage.addEventListener("click", () => clickOnImage(name, link));
 
   return cardElement;
-};
+}
 
 // Функция удаления карточки из DOM
 export function deleteCard(cardElement) {
